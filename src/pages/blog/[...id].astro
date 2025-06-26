@@ -1,0 +1,25 @@
+---
+import { getCollection, render } from "astro:content";
+
+//const post = await getEntry("posts", Astro.params.id as string);
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts");
+  return posts.map((post) => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+if (!post) {
+  throw new Error(`Post not found: ${Astro.params.id}`);
+}
+
+const { Content, headings } = await render(post);
+---
+<a href="/blog">Back to Blog</a>
+
+<h1>Blog Post</h1>
+<p>Post ID: {Astro.params.id}</p>
+<Content />
