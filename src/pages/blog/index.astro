@@ -1,16 +1,25 @@
 ---
-import { getEntry } from "astro:content";
 import { getCollection } from "astro:content";
 
-const posts = await getCollection("posts");
----
-<a href="/">Back to Home</a>
+import Layout from '@/layouts/Layout.astro';
 
-<h1>Blog</h1>
-<ul>
-    {posts.map((post) => (
-        <li>
-        <a href={`/blog/${post.id}`}>{post.data.title}</a>
-        </li>
-    ))}
-</ul>
+const posts = await getCollection("posts");
+const count = posts.length;
+const countText = count === 1 ? "1 post" : `${count} posts`;
+---
+
+<Layout title="Blog" description="A blog with {countText}">
+    <h1>Blog</h1>
+    <h2>A Blog with {countText}</h2>
+    {count === 0 ? (
+        <p>No posts found.</p>
+    ) : (
+        <ul>
+            {posts.map((post) => (
+                <li>
+                <a href={`/blog/${post.id}`}>{post.data.title}</a>
+                </li>
+            ))}
+        </ul>
+    )}
+</Layout>
